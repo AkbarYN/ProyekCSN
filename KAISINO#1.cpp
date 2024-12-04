@@ -203,33 +203,32 @@ void dompet()
 
 int main()
 {
-  while (true) {
-    int pilihan = get_option();
+  int pilihan = get_option();
 
-    while (pilihan == 1 || pilihan == 2) {
-      switch (pilihan) {
-        case 1:
-          cout << "Username: ";
-          cin >> l.lgnemail;
-          cout << "Password: ";
-          cin >> l.lgnpass;
-          break;
+  while (pilihan == 1 || pilihan == 2) {
+    switch (pilihan) {
+      case 1:
+        cout << "Username: ";
+        cin >> l.lgnemail;
+        cout << "Password: ";
+        cin >> l.lgnpass;
+        break;
 
-        case 2:
-          cout << "Username: ";
-          cin >> l.rgtemail;
-          cout << "Password: ";
-          cin >> l.rgpass;
-          break;
+      case 2:
+        cout << "Username: ";
+        cin >> l.rgtemail;
+        cout << "Password: ";
+        cin >> l.rgpass;
+        break;
 
-        default:
-          cout << "Pilihan tidak ditemukan";
-          break;
-      }
-
-      break;
+      default:
+        cout << "Pilihan tidak ditemukan";
+        break;
     }
 
+    break;
+  }
+  while (true) {
     int plhn_lobby = menu_lobby();
     while (plhn_lobby == 1 || plhn_lobby == 2) {
       switch (plhn_lobby) {
