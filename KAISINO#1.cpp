@@ -5,8 +5,7 @@
 #include <string>
 using namespace std;
 
-struct login
-{
+struct login {
   string lgnemail;
   string lgnpass;
   string rgtemail;
@@ -14,8 +13,7 @@ struct login
 };
 login l;
 
-struct wallet
-{
+struct wallet {
   int plhn_dompet;
   int deposit;
   int withdraw;
@@ -24,8 +22,7 @@ struct wallet
 };
 wallet d;
 
-struct Domino
-{
+struct Domino {
   int sisi1;
   int sisi2;
 };
@@ -33,8 +30,7 @@ Domino dm;
 
 void shuffleDeck(Domino deck[], int size)
 {
-  for (int i = size - 1; i > 0; i--)
-  {
+  for (int i = size - 1; i > 0; i--) {
     int j = rand() % (i + 1);
 
     Domino temp = deck[i];
@@ -58,24 +54,20 @@ void printHand(Domino d1, Domino d2)
 int getValidatedInput(int min, int max)
 {
   int input;
-  while (true)
-  {
+  while (true) {
     cin >> input;
-    if (cin.fail())
-    {
+    if (cin.fail()) {
       cout << "Salah input! Masukkan sebuah angka!" << endl;
-      cin.clear(); // clear error flag
+      cin.clear();  // clear error flag
       cin.ignore(numeric_limits<streamsize>::max(),
-                 '\n'); // ignore invalid input
+                 '\n');  // ignore invalid input
     }
-    else if (input < min || input > max)
-    {
+    else if (input < min || input > max) {
       cout << "Masukkan angka antara " << min << " dan " << max << "." << endl;
     }
-    else
-    {
+    else {
       cin.ignore(numeric_limits<streamsize>::max(),
-                 '\n'); // ignore remaining input
+                 '\n');  // ignore remaining input
       return input;
     }
   }
@@ -85,10 +77,8 @@ int gameQQ()
 {
   Domino deck[28];
   int k = 0;
-  for (int i = 0; i <= 6; i++)
-  {
-    for (int j = i; j <= 6; j++)
-    { // memverifikasi data domino
+  for (int i = 0; i <= 6; i++) {
+    for (int j = i; j <= 6; j++) {  // memverifikasi data domino
       deck[k].sisi1 = i;
       deck[k].sisi2 = j;
       k++;
@@ -115,16 +105,13 @@ int gameQQ()
   cout << "Nilai Pemain ke 2 adalah: " << value2 << endl;
   cout << endl;
 
-  if (value1 > value2)
-  {
+  if (value1 > value2) {
     cout << "Selamat Anda Menang";
   }
-  else if (value2 > value1)
-  {
+  else if (value2 > value1) {
     cout << "Anda Kalah";
   }
-  else
-  {
+  else {
     cout << "Seri";
   }
 
@@ -136,19 +123,16 @@ int gameMenu()
   int plhGame;
   cout << "Pilih Game Yang ingin dimainkan\n1. QiuQiu\n2. Roulette\n3. Slot"
        << endl;
-  while (true)
-  {
+  while (true) {
     cout << "Pilih [1-3]: " << endl;
     cin >> plhGame;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (cin.fail())
-    {
+    if (cin.fail()) {
       cout << "salah input! masukkan sebuah angka!" << endl;
       cin.clear();
       cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
-    else
-    {
+    else {
       break;
     }
   }
@@ -189,34 +173,31 @@ void dompet()
   cout << "3. Tunjukkan Saldo" << endl;
   d.plhn_dompet = getValidatedInput(1, 3);
 
-  switch (d.plhn_dompet)
-  {
-  case 1:
-    cout << "masukan jumlah deposit anda: ";
-    cin >> d.deposit;
-    d.balance += d.deposit;
-    break;
+  switch (d.plhn_dompet) {
+    case 1:
+      cout << "masukan jumlah deposit anda: ";
+      cin >> d.deposit;
+      d.balance += d.deposit;
+      break;
 
-  case 2:
-    cout << "Masukan jumlah wihtdraw: ";
-    cin >> d.withdraw;
-    if (d.withdraw > d.balance)
-    {
-      cout << "Saldo tidak cukup";
-    }
-    else
-    {
-      d.balance -= d.withdraw;
-    }
-    break;
+    case 2:
+      cout << "Masukan jumlah wihtdraw: ";
+      cin >> d.withdraw;
+      if (d.withdraw > d.balance) {
+        cout << "Saldo tidak cukup";
+      }
+      else {
+        d.balance -= d.withdraw;
+      }
+      break;
 
-  case 3:
-    cout << "Saldo Anda : " << d.balance;
-    break;
+    case 3:
+      cout << "Saldo Anda : " << d.balance;
+      break;
 
-  default:
-    cout << "Pilihan tidak ditemukan";
-    break;
+    default:
+      cout << "Pilihan tidak ditemukan";
+      break;
   }
 }
 
@@ -224,77 +205,74 @@ int main()
 {
   int pilihan = get_option();
 
-  while (pilihan == 1 || pilihan == 2)
-  {
-    switch (pilihan)
-    {
-    case 1:
-      cout << "Username: ";
-      cin >> l.lgnemail;
-      cout << "Password: ";
-      cin >> l.lgnpass;
-      break;
+  while (pilihan == 1 || pilihan == 2) {
+    switch (pilihan) {
+      case 1:
+        cout << "Username: ";
+        cin >> l.lgnemail;
+        cout << "Password: ";
+        cin >> l.lgnpass;
+        break;
 
-    case 2:
-      cout << "Username: ";
-      cin >> l.rgtemail;
-      cout << "Password: ";
-      cin >> l.rgpass;
-      break;
+      case 2:
+        cout << "Username: ";
+        cin >> l.rgtemail;
+        cout << "Password: ";
+        cin >> l.rgpass;
+        break;
 
-    default:
-      cout << "Pilihan tidak ditemukan";
-      break;
+      default:
+        cout << "Pilihan tidak ditemukan";
+        break;
     }
 
     break;
   }
 
   int plhn_lobby = menu_lobby();
-  while (plhn_lobby == 1 || plhn_lobby == 2)
-  {
-    switch (plhn_lobby)
-    {
-    case 1:
-      switch (gameMenu())
-      {
+  while (plhn_lobby == 1 || plhn_lobby == 2) {
+    switch (plhn_lobby) {
       case 1:
-        cout << "Memilih QiuQiu...." << endl;
+        switch (gameMenu()) {
+          case 1:
+            cout << "Memilih QiuQiu...." << endl;
 
-        cout << "Selamat Datang di QiuQiu KAISINO\nMasukkan Taruhan Anda: \n";
-        cin >> d.bet;
+            cout
+              << "Selamat Datang di QiuQiu KAISINO\nMasukkan Taruhan Anda: \n";
+            cin >> d.bet;
 
-        if (d.bet > d.balance)
-        {
-          cout << "Saldo anda tidak cukup";
+            if (d.bet > d.balance) {
+              cout << "Saldo anda tidak cukup";
+            }
+            else if (d.bet <= d.balance) {
+              cout << "Selamat bermain";
+              cout << endl;
+            }
+            else if (d.bet == 0) {
+              cout << "NGAPAIN SIH";
+            }
+
+            gameQQ();
+
+            break;
+
+          case 2:
+            cout << "Memilih Roulette.....";
+            break;
+
+          case 3:
+            cout << "Memilih Slot.....";
+            break;
         }
-        else if (d.bet <= d.balance)
-        {
-          cout << "Selamat bermain";
-          cout << endl;
-        }
-
-        gameQQ();
-
         break;
 
       case 2:
-        cout << "Memilih Roulette.....";
+        dompet();
         break;
 
-      case 3:
-        cout << "Memilih Slot.....";
+      default:
+        cout << "Pilihan tidak ditemukan";
         break;
-      }
-      break;
-
-    case 2:
-      dompet();
-      break;
-
-    default:
-      cout << "Pilihan tidak ditemukan";
-      break;
     }
 
     break;
