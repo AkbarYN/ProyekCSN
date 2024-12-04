@@ -203,80 +203,82 @@ void dompet()
 
 int main()
 {
-  int pilihan = get_option();
+  while (true) {
+    int pilihan = get_option();
 
-  while (pilihan == 1 || pilihan == 2) {
-    switch (pilihan) {
-      case 1:
-        cout << "Username: ";
-        cin >> l.lgnemail;
-        cout << "Password: ";
-        cin >> l.lgnpass;
-        break;
+    while (pilihan == 1 || pilihan == 2) {
+      switch (pilihan) {
+        case 1:
+          cout << "Username: ";
+          cin >> l.lgnemail;
+          cout << "Password: ";
+          cin >> l.lgnpass;
+          break;
 
-      case 2:
-        cout << "Username: ";
-        cin >> l.rgtemail;
-        cout << "Password: ";
-        cin >> l.rgpass;
-        break;
+        case 2:
+          cout << "Username: ";
+          cin >> l.rgtemail;
+          cout << "Password: ";
+          cin >> l.rgpass;
+          break;
 
-      default:
-        cout << "Pilihan tidak ditemukan";
-        break;
+        default:
+          cout << "Pilihan tidak ditemukan";
+          break;
+      }
+
+      break;
     }
 
-    break;
-  }
+    int plhn_lobby = menu_lobby();
+    while (plhn_lobby == 1 || plhn_lobby == 2) {
+      switch (plhn_lobby) {
+        case 1:
+          switch (gameMenu()) {
+            case 1:
+              cout << "Memilih QiuQiu...." << endl;
 
-  int plhn_lobby = menu_lobby();
-  while (plhn_lobby == 1 || plhn_lobby == 2) {
-    switch (plhn_lobby) {
-      case 1:
-        switch (gameMenu()) {
-          case 1:
-            cout << "Memilih QiuQiu...." << endl;
+              cout
+                << "Selamat Datang di QiuQiu KAISINO\nMasukkan Taruhan Anda: \n";
+              cin >> d.bet;
 
-            cout
-              << "Selamat Datang di QiuQiu KAISINO\nMasukkan Taruhan Anda: \n";
-            cin >> d.bet;
+              if (d.bet > d.balance) {
+                cout << "Saldo anda tidak cukup";
+              }
+              else if (d.bet <= d.balance) {
+                cout << "Selamat bermain";
+                cout << endl;
+              }
+              else if (d.bet == 0) {
+                cout << "NGAPAIN SIH";
+              }
 
-            if (d.bet > d.balance) {
-              cout << "Saldo anda tidak cukup";
-            }
-            else if (d.bet <= d.balance) {
-              cout << "Selamat bermain";
-              cout << endl;
-            }
-            else if (d.bet == 0) {
-              cout << "NGAPAIN SIH";
-            }
+              gameQQ();
 
-            gameQQ();
+              break;
 
-            break;
+            case 2:
+              cout << "Memilih Roulette.....";
+              break;
 
-          case 2:
-            cout << "Memilih Roulette.....";
-            break;
+            case 3:
+              cout << "Memilih Slot.....";
+              break;
+          }
+          break;
 
-          case 3:
-            cout << "Memilih Slot.....";
-            break;
-        }
-        break;
+        case 2:
+          dompet();
+          break;
 
-      case 2:
-        dompet();
-        break;
+        default:
+          cout << "Pilihan tidak ditemukan";
+          break;
+      }
 
-      default:
-        cout << "Pilihan tidak ditemukan";
-        break;
+      break;
     }
 
-    break;
+    cin.get();
   }
-
-  cin.get();
 }
