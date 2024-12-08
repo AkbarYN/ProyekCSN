@@ -612,143 +612,28 @@ int main()  // Fungsi utama
 {
   login l;   // pemanggilan struktur login
   wallet d;  // pemanggilan struktur dompet
-
   while (true) {
-    int pilihan = get_option(l);
-    switch (pilihan) {
-      case 1:  // menu login
-        cout << "\nMasukkan Username dan Password mu\n";
-        cout << "Username: ";
-        cin >> l.lgnemail;
-        cout << "Password: ";
-        cin >> l.lgnpass;
+    while (true) {
+      int pilihan = get_option(l);
+      switch (pilihan) {
+        case 1:  // menu login
+          cout << "\nMasukkan Username dan Password mu\n";
+          cout << "Username: ";
+          cin >> l.lgnemail;
+          cout << "Password: ";
+          cin >> l.lgnpass;
 
-        if (verifikasiLogin(l.lgnemail, l.lgnpass, d)) {
-          cout << "Login Berhasil!" << endl;
-          break;
-        }
-        else {
-          cout << "Login Gagal!\nUsername atau password salah" << endl;
-        }
-        continue;
-
-      case 2:  // menu register
-        tambahData(l, d);
-        break;
-
-      default:
-        cout << "Pilihan tidak ditemukan";
-        break;
-    }
-
-    break;  //keluar dari loop login/register
-  }
-  while (
-    true) {  // perulangan agar dapat kembali ke menu setelah memilih di lobby
-    cin.clear();
-    int plhn_lobby = menu_lobby();
-    if (plhn_lobby == 3) {
-      cout << "Keluar dari lobby. Kembali ke menu login/register.\n";
-      break;
-    }  // Kembali ke menu login/register
-
-    while (plhn_lobby == 1 || plhn_lobby == 2) {
-      switch (plhn_lobby) {
-        case 1:
-          switch (gameMenu()) {
-            case 1:
-              cout << "Memilih QiuQiu...." << endl;
-              loadingDot(10, 100);
-              cout
-                << "============================================================"
-                << endl;
-              cout << "Selamat Datang di QiuQiu KAISINO" << endl;
-              cout << "Tata Cara Bermain QiuQiu" << endl;
-              cout << "1. Pemain dan Host akan diberikan masing masing 2 domino"
-                   << endl;
-              cout << "2. Setelah diberikan nilai domino akan ditotalkan"
-                   << endl;
-              cout << "3. Setelah di totalkan hanya angka terakhir yang dibaca"
-                   << endl;
-              cout
-                << "4. Semakin tinggi angkamu semakin besar peluang untuk menang"
-                << endl;
-              cout << "5. Jika mengalami seri. Host akan memenangkan permainan"
-                   << endl;
-              cout
-                << "============================================================"
-                   "\n"
-                << endl;
-              cout << "Masukkan Taruhan Anda: \n";
-              cin >> d.bet;
-              cout
-                << "============================================================"
-                   "\n";
-
-              if (d.bet > d.balance) {
-                cout << "Saldo anda tidak cukup\n";
-                break;
-              }
-              else if (d.bet == 0) {
-                cout << "NGAPAIN SIH\n";
-                break;
-              }
-              else if (d.bet <= d.balance) {
-                cout << "Selamat bermain";
-                cout << endl;
-              }
-
-              gameQQ(d, l);
-
-              break;
-
-            case 2:
-              cout << "Memilih BlackJack\n";
-              loadingDot(10, 100);
-
-              cout
-                << "============================================================"
-                << endl;
-              cout << "Selamat Datang di BlackJack KAISINO" << endl;
-              cout << "Tata Cara Bermain BlackJack" << endl;
-              cout << "1. " << endl;
-              cout << "2. " << endl;
-              cout << "3. " << endl;
-              cout << "4. " << endl;
-              cout << "5. " << endl;
-              cout
-                << "============================================================"
-                   "\n"
-                << endl;
-              cout << "Masukkan Taruhan Anda: ";
-              cin >> d.bet;
-              cout
-                << "============================================================"
-                   "\n";
-
-              if (d.bet > d.balance) {
-                cout << "Saldo anda tidak cukup\n";
-                break;
-              }
-              else if (d.bet == 0) {
-                cout << "NGAPAIN SIH\n";
-                break;
-              }
-              else if (d.bet <= d.balance) {
-                cout << "Selamat bermain";
-
-                loadingDot(10, 100);
-                gameBlackJ(d, l);
-              }
-              break;
-
-            case 3:
-              break;
+          if (verifikasiLogin(l.lgnemail, l.lgnpass, d)) {
+            cout << "Login Berhasil!" << endl;
+            break;
           }
-          break;
+          else {
+            cout << "Login Gagal!\nUsername atau password salah" << endl;
+          }
+          continue;
 
-        case 2:
-          dompet(d, l);
+        case 2:  // menu register
+          tambahData(l, d);
           break;
 
         default:
@@ -756,7 +641,126 @@ int main()  // Fungsi utama
           break;
       }
 
-      break;
+      break;  //keluar dari loop login/register
+    }
+    while (
+      true) {  // perulangan agar dapat kembali ke menu setelah memilih di lobby
+      cin.clear();
+      int plhn_lobby = menu_lobby();
+      if (plhn_lobby == 3) {
+        cout << "Keluar dari lobby. Kembali ke menu login/register.\n";
+        break;
+      }  // Kembali ke menu login/register
+
+      while (plhn_lobby == 1 || plhn_lobby == 2) {
+        switch (plhn_lobby) {
+          case 1:
+            switch (gameMenu()) {
+              case 1:
+                cout << "Memilih QiuQiu...." << endl;
+                loadingDot(10, 100);
+                cout
+                  << "============================================================"
+                  << endl;
+                cout << "Selamat Datang di QiuQiu KAISINO" << endl;
+                cout << "Tata Cara Bermain QiuQiu" << endl;
+                cout
+                  << "1. Pemain dan Host akan diberikan masing masing 2 domino"
+                  << endl;
+                cout << "2. Setelah diberikan nilai domino akan ditotalkan"
+                     << endl;
+                cout
+                  << "3. Setelah di totalkan hanya angka terakhir yang dibaca"
+                  << endl;
+                cout
+                  << "4. Semakin tinggi angkamu semakin besar peluang untuk menang"
+                  << endl;
+                cout
+                  << "5. Jika mengalami seri. Host akan memenangkan permainan"
+                  << endl;
+                cout
+                  << "============================================================"
+                     "\n"
+                  << endl;
+                cout << "Masukkan Taruhan Anda: \n";
+                cin >> d.bet;
+                cout
+                  << "============================================================"
+                     "\n";
+
+                if (d.bet > d.balance) {
+                  cout << "Saldo anda tidak cukup\n";
+                  break;
+                }
+                else if (d.bet == 0) {
+                  cout << "NGAPAIN SIH\n";
+                  break;
+                }
+                else if (d.bet <= d.balance) {
+                  cout << "Selamat bermain";
+                  cout << endl;
+                }
+
+                gameQQ(d, l);
+
+                break;
+
+              case 2:
+                cout << "Memilih BlackJack\n";
+                loadingDot(10, 100);
+
+                cout
+                  << "============================================================"
+                  << endl;
+                cout << "Selamat Datang di BlackJack KAISINO" << endl;
+                cout << "Tata Cara Bermain BlackJack" << endl;
+                cout << "1. " << endl;
+                cout << "2. " << endl;
+                cout << "3. " << endl;
+                cout << "4. " << endl;
+                cout << "5. " << endl;
+                cout
+                  << "============================================================"
+                     "\n"
+                  << endl;
+                cout << "Masukkan Taruhan Anda: ";
+                cin >> d.bet;
+                cout
+                  << "============================================================"
+                     "\n";
+
+                if (d.bet > d.balance) {
+                  cout << "Saldo anda tidak cukup\n";
+                  break;
+                }
+                else if (d.bet == 0) {
+                  cout << "NGAPAIN SIH\n";
+                  break;
+                }
+                else if (d.bet <= d.balance) {
+                  cout << "Selamat bermain";
+
+                  loadingDot(10, 100);
+                  gameBlackJ(d, l);
+                }
+                break;
+
+              case 3:
+                break;
+            }
+            break;
+
+          case 2:
+            dompet(d, l);
+            break;
+
+          default:
+            cout << "Pilihan tidak ditemukan";
+            break;
+        }
+
+        break;
+      }
     }
   }
 }
