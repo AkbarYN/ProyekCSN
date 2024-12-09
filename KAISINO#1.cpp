@@ -42,10 +42,18 @@ struct Remi {
 };
 Remi r;
 
-void updateUserData(const string& email, wallet& d)
+void updateUserData(login& data, wallet& d)
 {
-  ifstream inputFile("userID.txt");
-  ofstream tempFile("temp.txt");
+  string email;
+  if (data.lgnemail.empty()) {
+    email = data.rgtemail;
+  }
+  else {
+    email = data.lgnemail;
+  }
+
+  ifstream inputFile("userID.csv");
+  ofstream tempFile("temp.csv");
 
   if (!inputFile.is_open() || !tempFile.is_open()) {
     cout << "Gagal Membuka File!" << endl;
@@ -53,28 +61,29 @@ void updateUserData(const string& email, wallet& d)
   }
 
   string line;
-  string dataEmail, dataPass;
   bool userFound = false;
 
   while (getline(inputFile, line)) {
-    if (line.find("Username: ") != string::npos) {
-      dataEmail = line.substr(10);  // Extract email
+    stringstream ss(line);
+    vector<string> akunData;
+    string data;
+    char delim = ',';
+    while (getline(ss, data, delim)) {
+      akunData.push_back(data);
     }
-    if (line.find("Password: ") != string::npos) {
-      dataPass = line.substr(10);  // Extract password
+
+    string dataEmail = akunData[0];
+    string dataPass = akunData[1];
+    long long dataSaldo = d.balance;
+
+    if (dataEmail == email) {
+      // Jika ditemukan akun yang cocok dengan email, update saldo
+      tempFile << dataEmail << "," << dataPass << "," << dataSaldo << endl;
+      userFound = true;
     }
-    if (line.find("Saldo: ") != string::npos) {
-      if (dataEmail == email) {
-        // Update balance for this user
-        tempFile << "Username: " << dataEmail << endl;
-        tempFile << "Password: " << dataPass << endl;
-        tempFile << "Saldo: " << d.balance << endl;  // Write updated balance
-        tempFile << " " << endl;  // Blank line for separation
-        userFound = true;
-      }
-      else {
-        tempFile << "Saldo: " << d.balance << endl;  // Write original line
-      }
+    else {
+      // Menulis baris tanpa perubahan
+      tempFile << line << endl;
     }
   }
 
@@ -82,19 +91,19 @@ void updateUserData(const string& email, wallet& d)
   tempFile.close();
 
   if (userFound) {
-    // Replace original file with updated file
-    remove("userID.txt");
-    rename("temp.txt", "userID.txt");
+    // ganti file original dengan file yang telah diperbarui
+    remove("userID.csv");
+    rename("temp.csv", "userID.csv");
   }
   else {
-    cout << "User  data not found!" << endl;
-    remove("temp.txt");  // Hapus file sementara jika tidak ada perubahan
+    cout << "User data not found!" << endl;
+    remove("temp.csv");  // Hapus file sementara jika tidak ada perubahan
   }
 }
 
 bool verifikasiLogin(const string& email, const string& pass, wallet& d)
 {
-  ifstream inputFile("userID.txt");
+  ifstream inputFile("userID.csv");
   string line;
 
   if (!inputFile.is_open()) {
@@ -102,25 +111,20 @@ bool verifikasiLogin(const string& email, const string& pass, wallet& d)
     return false;
   }
 
-  vector<vector<string>> dataPlayer;  // untuk menyimpan data player
   string dataEmail, dataPass;
   long long dataBalance;
   bool loginValid = false;
 
   while (getline(inputFile, line)) {
-    if (line.find("Username: ") != string::npos) {
-      dataEmail = line.substr(10);  // Extract email
-    }
-    else if (line.find("Password: ") != string::npos) {
-      dataPass = line.substr(10);  // Extract password
-    }
-    else if (line.find("Saldo: ") != string::npos) {
-      dataBalance = stoll(line.substr(7));  // Extract balance
-      if (dataEmail == email && dataPass == pass) {
-        loginValid = true;
-        d.balance = dataBalance;
-        break;
-      }
+    stringstream ss(line);
+    getline(ss, dataEmail, ',');
+    getline(ss, dataPass, ',');
+    ss >> dataBalance;
+
+    if (dataEmail == email && dataPass == pass) {
+      loginValid = true;
+      d.balance = dataBalance;
+      break;
     }
   }
 
@@ -245,9 +249,9 @@ int gameBlackJ(wallet& d, login& l)
       if (kalkulasiNilai(playerHand) > 21) {
         cout << "Pemain over 21! Anda kalah.\n";
         d.balance -= d.bet;
-        cout << "Anda memenangkan sebesar: " << d.bet << endl;
+        cout << "Anda kalah sebesar: " << d.bet << endl;
         loadingDot(10, 100);
-        updateUserData(l.lgnemail, d);
+        updateUserData(l, d);
         return 0;
       }
     }
@@ -278,7 +282,7 @@ int gameBlackJ(wallet& d, login& l)
     cout << "Nilai Dealer lebih dari 21!\n Anda menang.\n";
     d.balance = 2 * d.bet;
     cout << "Anda memenangkan sebesar: " << d.bet << endl;
-    updateUserData(l.lgnemail, d);
+    updateUserData(l, d);
     return 0;
   }
   if (playerValue > dealerValue) {
@@ -299,45 +303,64 @@ int gameBlackJ(wallet& d, login& l)
     cout << "Seri!\n";
     loadingDot(10, 100);
   }
-  updateUserData(l.lgnemail, d);
+  updateUserData(l, d);
   return 0;
 }
 //======================================================================//
 
 void tambahData(login& l, wallet& d)
 {
-  ofstream outputFile("userID.txt", ios::app);
-
-  if (!outputFile.is_open()) {
-    cout << "Gagal Membuka File!" << endl;
-    return;
-  }
-
   cout << "Registrasi Baru" << endl;
   cout << "Username: ";
   cin >> l.rgtemail;
 
   // Cek apakah username sudah ada
-  ifstream inputFile("userID.txt");
-  string line;
-  while (getline(inputFile, line)) {
-    if (line.find("Username: " + l.rgtemail) != string::npos) {
-      cout << "Username sudah terdaftar. Silakan pilih username lain." << endl;
-      inputFile.close();
-      return tambahData(l, d);
-    }
-  }
-  inputFile.close();
-
   cout << "Password: ";
   cin >> l.rgpass;
-
-  outputFile << "userID\n";
-  outputFile << "Username: " << l.rgtemail << endl;
-  outputFile << "Password: " << l.rgpass << endl;
   d.balance = 1000;
-  outputFile << "Saldo: " << d.balance << endl;
-  outputFile << " " << endl;
+
+  ifstream inputFile("userID.csv", std::ios::app);
+  ofstream tempFile("temp.csv");
+
+  if (!inputFile.is_open() || !tempFile.is_open()) {
+    cout << "Gagal Membuka File!" << endl;
+    return;
+  }
+
+  string line;
+  bool userFound = false;
+  vector<vector<string>> allData;
+  while (getline(inputFile, line)) {
+    vector<string> akunData;
+    stringstream ss(line);
+    string data;
+    char delim = ',';
+    while (getline(ss, data, delim)) {
+      akunData.push_back(data);
+    }
+
+    if (akunData[0] == l.rgtemail) {
+      cout << "Username sudah ada" << "\n";
+
+      userFound = true;
+    }
+    allData.push_back(akunData);
+  }
+  if (!userFound) {
+    vector<string> baru{ l.rgtemail, l.rgpass, "1000" };
+    allData.push_back(baru);
+  }
+
+  for (const auto& akun : allData) {
+    tempFile << akun[0] << "," << akun[1] << "," << akun[2] << endl;
+  }
+
+  inputFile.close();
+  tempFile.close();
+
+  remove("userID.csv");
+  rename("temp.csv", "userID.csv");
+  remove("temp.csv");
 
   cout << "Registrasi Berhasil" << endl;
 }
@@ -373,7 +396,7 @@ void shuffleDeck(Domino deck[], int size)  // Mengacak deck domino
 
 int menghitungNilai(Domino d1,
                     Domino d2)  // Fungsi untuk menghitung nilai Domino
-                                // menggunakan %10 sesuai peraturan dari QiuQiu
+// menggunakan %10 sesuai peraturan dari QiuQiu
 {
   int sum = (d1.sisi1 + d1.sisi2 + d2.sisi1 + d2.sisi2) % 10;
   return sum;
@@ -440,7 +463,7 @@ int gameQQ(wallet& d, login& l)
     cout << endl;
     loadingDot(10, 100);
   }
-  updateUserData(l.lgnemail, d);
+  updateUserData(l, d);
 
   return 0;
 }
@@ -513,7 +536,6 @@ int gameMenu()  // Fungsi untuk menampilkan menu game
 int get_option(login& l)  // Fungsi untuk menampilkan login menu
 {
   int plhnlogin;
-  // system("cls");
   cout << "\n=====================" << endl;
   cout << "=      KAISINO      =" << endl;
   cout << "=====================" << endl;
@@ -528,7 +550,6 @@ int menu_lobby()  // Fungsi untuk menampilkan menu lobby dimana player bisa
                   // memilih antara menu game dan dompet
 {
   int plhnlobby;
-  // system("cls");
   cout << "\n====================" << endl;
   cout << "=      LOBBY       =" << endl;
   cout << "====================" << endl;
@@ -544,7 +565,6 @@ void dompet(wallet& d, login& l)
 // Fungsi untuk membuat menu dompet dan pemanggilan structure wallet menggunakan
 // past by reference
 {
-  // system("cls");
   cout << "====================" << endl;
   cout << "=      LOBBY       =" << endl;
   cout << "====================" << endl;
@@ -564,7 +584,7 @@ void dompet(wallet& d, login& l)
       if (d.deposit <= 100000000) {
         cout << "Deposit berhasil\n";
         d.balance += d.deposit;
-        updateUserData(l.lgnemail, d);
+        updateUserData(l, d);
       }
       else {
         cout << "Deposit Gagal\nMaksimal Deposit hanya 100000000\n";
@@ -590,7 +610,7 @@ void dompet(wallet& d, login& l)
       }
       else {
         d.balance -= d.withdraw;
-        updateUserData(l.lgnemail, d);
+        updateUserData(l, d);
       }
       break;
 
@@ -714,11 +734,15 @@ int main()  // Fungsi utama
                   << endl;
                 cout << "Selamat Datang di BlackJack KAISINO" << endl;
                 cout << "Tata Cara Bermain BlackJack" << endl;
-                cout << "1. " << endl;
-                cout << "2. " << endl;
-                cout << "3. " << endl;
-                cout << "4. " << endl;
-                cout << "5. " << endl;
+                cout
+                  << "1. Pemain dan Host akan mendapatkan dua kartu di awal permainan."
+                  << endl;
+                cout << "2. Pemain dapat memilih [HIT] atau [STAND]." << endl;
+                cout << "3. Tujuannya adalah untuk mendekati angka 21." << endl;
+                cout << "4. Jika Host melebihi 21, pemain menang." << endl;
+                cout
+                  << "5. Jika nilai pemain lebih tinggi dari host, pemain menang"
+                  << endl;
                 cout
                   << "============================================================"
                      "\n"
